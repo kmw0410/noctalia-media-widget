@@ -10,6 +10,8 @@ work with Spotify, VLC, Firefox, and other MPRIS-compatible applications. It
 can also hide itself when no player is active, keeping the desktop uncluttered
 when media is not in use.
 
+<img width="287" height="108" alt="image" src="https://github.com/user-attachments/assets/b7f2a88c-85f7-41b0-a7e0-541fd7f693a5" />
+
 ## Structure
 
 ```text
