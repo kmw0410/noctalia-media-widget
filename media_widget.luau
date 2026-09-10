@@ -194,11 +194,28 @@ local function refresh()
     noctalia.runAsync({ "playerctl", "position" }, function(positionResult)
       noctalia.runAsync({ "playerctl", "status" }, function(statusResult)
         state.queryPending = false
+        local trackChanged = title ~= state.title
+        local reportedPosition = positionResult.exitCode == 0 and tonumber(trimmed(positionResult.stdout)) or nil
         state.available = statusResult.exitCode == 0
         state.title = title
         state.artist = artist ~= "" and artist or "Unknown artist / channel"
-        state.duration = duration
-        state.position = positionResult.exitCode == 0 and (tonumber(trimmed(positionResult.stdout)) or 0) or 0
+        -- MPRIS position/length can be temporarily unavailable while a player
+        -- changes state. Keep the last good values so the progress fill does
+        -- not jump back to zero or disappear between successful polls.
+        if duration > 0 or trackChanged then
+          state.duration = duration
+        end
+        if reportedPosition ~= nil then
+          -- The player clock and frame tick arrive on different schedules.
+          -- Ignore tiny corrections so the bar never jitters backward; a large
+          -- delta is treated as an intentional seek and applied immediately.
+          local drift = reportedPosition - state.position
+          if trackChanged or math.abs(drift) >= 1.5 then
+            state.position = math.max(0, reportedPosition)
+          end
+        elseif trackChanged then
+          state.position = 0
+        end
         state.status = statusResult.exitCode == 0 and trimmed(statusResult.stdout) or "Stopped"
         render()
       end)
