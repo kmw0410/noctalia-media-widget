@@ -30,14 +30,14 @@ LICENSE                MIT license
 ## Install and enable
 
 These commands assume that this repository is located at
-`/home/kmw/noctalia-media-widget`. If you cloned it elsewhere, replace the
+`./noctalia-media-widget`. If you cloned it elsewhere, replace the
 source path with your checkout location. When updating an existing installation,
 replace the previous `media-widget` directory before copying so the installed
 files stay in sync with the repository.
 
 ```sh
 mkdir -p ~/.local/share/noctalia/plugins
-cp -r /home/kmw/noctalia-media-widget ~/.local/share/noctalia/plugins/media-widget
+cp -r ./noctalia-media-widget ~/.local/share/noctalia/plugins/media-widget
 noctalia msg plugins enable kmw0410/media-player
 ```
 
