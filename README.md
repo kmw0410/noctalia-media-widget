@@ -51,8 +51,10 @@ successfully in a terminal.
 The widget settings let you adjust:
 
 - Progress bar visibility
-- Font selection from the system-installed font list
-- Card edge shadow
+- Layout type: the standard stacked card (Type 1) or compact metadata-and-controls row (Type 2)
+- Font family (use any installed system font; leave blank for Noctalia's default)
+- Separate title and artist text sizes
+- Card edge border (the desktop widget background is controlled in Noctalia)
 - Whether to hide the widget when no player is active
 
 When more than one player is running, the widget shows the MPRIS player selected

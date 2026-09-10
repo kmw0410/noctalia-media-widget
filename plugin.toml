@@ -14,11 +14,48 @@ id = "compact_media_player"
 entry = "media_widget.luau"
 
 [[desktop_widget.setting]]
+key = "layout_type"
+type = "select"
+label_key = "settings.layout_type.label"
+description_key = "settings.layout_type.description"
+default = "type_1"
+options = [
+  { value = "type_1", label_key = "settings.layout_type.options.type_1" },
+  { value = "type_2", label_key = "settings.layout_type.options.type_2" },
+]
+
+[[desktop_widget.setting]]
+key = "font_family"
+type = "string"
+label_key = "settings.font_family.label"
+description_key = "settings.font_family.description"
+default = ""
+
+[[desktop_widget.setting]]
+key = "title_font_size"
+type = "int"
+label_key = "settings.title_font_size.label"
+description_key = "settings.title_font_size.description"
+default = 18
+min = 8
+max = 48
+
+[[desktop_widget.setting]]
+key = "artist_font_size"
+type = "int"
+label_key = "settings.artist_font_size.label"
+description_key = "settings.artist_font_size.description"
+default = 14
+min = 8
+max = 40
+
+[[desktop_widget.setting]]
 key = "show_progress"
 type = "bool"
 label_key = "settings.show_progress.label"
 description_key = "settings.show_progress.description"
 default = true
+visible_when = { key = "layout_type", values = ["type_1"] }
 
 [[desktop_widget.setting]]
 key = "show_shadow"

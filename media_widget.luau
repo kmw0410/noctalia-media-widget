@@ -39,10 +39,30 @@ local function configBool(key, default)
   return value == true
 end
 
+local function configNumber(key, default)
+  local value = tonumber(noctalia.getConfig(key))
+  return value or default
+end
+
+local function configFontFamily()
+  local value = noctalia.getConfig("font_family")
+  if type(value) ~= "string" then
+    return ""
+  end
+  return trimmed(value)
+end
+
+local function compactLayout()
+  return noctalia.getConfig("layout_type") == "type_2"
+end
+
 local function render()
   local showShadow = configBool("show_shadow", true)
   local showProgress = configBool("show_progress", true)
   local hideWhenIdle = configBool("hide_when_idle", false)
+  local isCompact = compactLayout()
+  local fontFamily = configFontFamily()
+  desktopWidget.setNeedsFrameTick(not isCompact and showProgress and state.available and state.status == "Playing" and state.duration > 0)
   if hideWhenIdle and not state.available then
     desktopWidget.render(ui.box({ width = 1, height = 1, visible = false }))
     return
@@ -50,19 +70,49 @@ local function render()
 
   local titleProps = {
     text = state.title,
-    fontSize = 18,
+    fontSize = configNumber("title_font_size", 18),
     fontWeight = "bold",
     color = state.available and "on_surface" or "on_surface_variant",
     maxLines = 1,
-    maxWidth = 330,
+    maxWidth = isCompact and 180 or 330,
   }
   local artistProps = {
     text = state.artist,
-    fontSize = 14,
+    fontSize = configNumber("artist_font_size", 14),
     color = "on_surface_variant",
     maxLines = 1,
-    maxWidth = 330,
+    maxWidth = isCompact and 180 or 330,
   }
+  if fontFamily ~= "" then
+    titleProps.fontFamily = fontFamily
+    artistProps.fontFamily = fontFamily
+  end
+
+  if isCompact then
+    -- Type 2 keeps the metadata and transport controls in a single compact row.
+    local controls = ui.row({ gap = 8, align = "center", justify = "end" }, {
+      ui.button({ glyph = "player-skip-back", variant = "ghost", controlSize = "sm", enabled = state.available, onClick = "previous" }),
+      ui.button({ glyph = state.status == "Playing" and "player-pause" or "player-play", variant = "ghost", controlSize = "sm", enabled = state.available, onClick = "playPause" }),
+      ui.button({ glyph = "player-skip-forward", variant = "ghost", controlSize = "sm", enabled = state.available, onClick = "next" }),
+    })
+    desktopWidget.render(ui.row({
+      gap = 12,
+      padding = 14,
+      radius = 14,
+      border = showShadow,
+      borderWidth = showShadow and 1 or 0,
+      width = 330,
+      align = "center",
+      justify = "space_between",
+    }, {
+      ui.column({ gap = 2, width = 180 }, {
+        ui.label(titleProps),
+        ui.label(artistProps),
+      }),
+      controls,
+    }))
+    return
+  end
 
   local content = {
     ui.label(titleProps),
@@ -100,7 +150,6 @@ local function render()
     border = showShadow,
     borderWidth = showShadow and 1 or 0,
   }
-  rootProps.fill = "surface/0.92"
   desktopWidget.render(ui.column(rootProps, content))
 end
 
@@ -183,4 +232,14 @@ function update()
   refresh()
 end
 
+function onFrameTick(deltaMs)
+  if compactLayout() or not configBool("show_progress", true) or state.status ~= "Playing" or state.duration <= 0 then
+    return
+  end
+
+  state.position = math.min(state.duration, math.max(0, state.position + (deltaMs / 1000)))
+  render()
+end
+
+desktopWidget.setWantsSecondTicks(true)
 render()
