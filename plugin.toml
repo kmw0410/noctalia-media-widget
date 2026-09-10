@@ -21,20 +21,6 @@ description_key = "settings.show_progress.description"
 default = true
 
 [[desktop_widget.setting]]
-key = "font_family"
-type = "string"
-label_key = "settings.font_family.label"
-description_key = "settings.font_family.description"
-default = ""
-
-[[desktop_widget.setting]]
-key = "show_background"
-type = "bool"
-label_key = "settings.show_background.label"
-description_key = "settings.show_background.description"
-default = true
-
-[[desktop_widget.setting]]
 key = "show_shadow"
 type = "bool"
 label_key = "settings.show_shadow.label"

@@ -1,10 +1,6 @@
 {
   "settings.show_progress.label": "Show progress bar",
   "settings.show_progress.description": "Display the current playback position below the artist or channel.",
-  "settings.font_family.label": "Text font family",
-  "settings.font_family.description": "A system font family for the title and artist. Leave blank to use Noctalia's default font.",
-  "settings.show_background.label": "Show background",
-  "settings.show_background.description": "Show the translucent card background behind the media controls.",
   "settings.show_shadow.label": "Show shadow edge",
   "settings.show_shadow.description": "Show the subtle elevated card edge. Native drop shadows are not currently exposed to declarative plugin widgets.",
   "settings.hide_when_idle.label": "Hide when idle",

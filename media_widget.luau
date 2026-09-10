@@ -40,12 +40,9 @@ local function configBool(key, default)
 end
 
 local function render()
-  local showBackground = configBool("show_background", true)
   local showShadow = configBool("show_shadow", true)
   local showProgress = configBool("show_progress", true)
   local hideWhenIdle = configBool("hide_when_idle", false)
-  local fontFamily = trimmed(noctalia.getConfig("font_family"))
-
   if hideWhenIdle and not state.available then
     desktopWidget.render(ui.box({ width = 1, height = 1, visible = false }))
     return
@@ -66,11 +63,6 @@ local function render()
     maxLines = 1,
     maxWidth = 330,
   }
-
-  if fontFamily ~= "" then
-    titleProps.fontFamily = fontFamily
-    artistProps.fontFamily = fontFamily
-  end
 
   local content = {
     ui.label(titleProps),
@@ -108,9 +100,7 @@ local function render()
     border = showShadow,
     borderWidth = showShadow and 1 or 0,
   }
-  if showBackground then
-    rootProps.fill = "surface/0.92"
-  end
+  rootProps.fill = "surface/0.92"
   desktopWidget.render(ui.column(rootProps, content))
 end
 
